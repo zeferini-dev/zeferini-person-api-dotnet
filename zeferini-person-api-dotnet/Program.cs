@@ -1,5 +1,5 @@
-using Microsoft.OpenApi.Models;
 using FluentValidation;
+using Microsoft.OpenApi;
 using ZeferiniPersonApi.DTOs;
 using ZeferiniPersonApi.Models;
 using ZeferiniPersonApi.Services;
@@ -56,5 +56,5 @@ app.MapControllers();
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 app.Run($"http://0.0.0.0:{port}");
-public partial class Program { } // For integration testing purposes
 
+public partial class Program { } // For integration testing purposes
