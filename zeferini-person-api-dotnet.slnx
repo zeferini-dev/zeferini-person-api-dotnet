@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="zeferini-person-api-dotnet.Tests/zeferini-person-api-dotnet.Tests.csproj" />
+  <Project Path="zeferini-person-api-dotnet/zeferini-person-api-dotnet.csproj" />
+</Solution>
