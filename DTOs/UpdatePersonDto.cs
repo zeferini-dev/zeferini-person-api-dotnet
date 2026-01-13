@@ -1,0 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace ZeferiniPersonApi.DTOs;
+
+public class UpdatePersonDto
+{
+    /// <summary>
+    /// Full name of the person
+    /// </summary>
+    /// <example>Ada Lovelace</example>
+    [StringLength(120)]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Email address of the person
+    /// </summary>
+    /// <example>ada@example.com</example>
+    [EmailAddress]
+    [StringLength(180)]
+    public string? Email { get; set; }
+}
