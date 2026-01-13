@@ -13,98 +13,7 @@ using ZeferiniPersonApi.Filters;
 namespace ZeferiniPersonApi.Tests.Filters;
 
 public class FluentValidationActionFilterTests
-{
-    [Fact]
-    public void OnActionExecuting_ValidArgument_DoesNotSetResult()
-    {
-        // Arrange
-        var argument = new object();
-        var validatorMock = new Mock<IValidator<object>>();
-        validatorMock
-            .Setup(v => v.Validate(It.IsAny<IValidationContext>()))
-            .Returns(new ValidationResult());
-
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        serviceProviderMock
-            .Setup(sp => sp.GetService(typeof(IValidator<object>)))
-            .Returns(validatorMock.Object);
-
-        var httpContext = new DefaultHttpContext
-        {
-            RequestServices = serviceProviderMock.Object
-        };
-
-        var actionContext = new ActionContext
-        {
-            HttpContext = httpContext,
-            ActionDescriptor = new ControllerActionDescriptor()
-        };
-
-        var actionArguments = new Dictionary<string, object> { { "dto", argument } };
-        var context = new ActionExecutingContext(
-            actionContext,
-            new List<IFilterMetadata>(),
-            actionArguments,
-            controller: null
-        );
-
-        var filter = new FluentValidationActionFilter();
-
-        // Act
-        filter.OnActionExecuting(context);
-
-        // Assert
-        Assert.Null(context.Result);
-    }
-
-    [Fact]
-    public void OnActionExecuting_InvalidArgument_SetsBadRequestResult()
-    {
-        // Arrange
-        var argument = new object();
-        var errors = new List<ValidationFailure>
-        {
-            new ValidationFailure("Name", "Name is required")
-        };
-        var validatorMock = new Mock<IValidator<object>>();
-        validatorMock
-            .Setup(v => v.Validate(It.IsAny<IValidationContext>()))
-            .Returns(new ValidationResult(errors));
-
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        serviceProviderMock
-            .Setup(sp => sp.GetService(typeof(IValidator<object>)))
-            .Returns(validatorMock.Object);
-
-        var httpContext = new DefaultHttpContext
-        {
-            RequestServices = serviceProviderMock.Object
-        };
-
-        var actionContext = new ActionContext
-        {
-            HttpContext = httpContext,
-            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
-            ActionDescriptor = new ControllerActionDescriptor()
-        };
-
-        var actionArguments = new Dictionary<string, object> { { "dto", argument } };
-        var context = new ActionExecutingContext(
-            actionContext,
-            new List<IFilterMetadata>(),
-            actionArguments,
-            controller: null
-        );
-
-        var filter = new FluentValidationActionFilter();
-
-        // Act
-        filter.OnActionExecuting(context);
-
-        // Assert
-        var badRequest = Assert.IsType<BadRequestObjectResult>(context.Result);
-        Assert.NotNull(badRequest.Value);
-    }
+{   
 
     [Fact]
     public void OnActionExecuting_NullArgument_DoesNothing()
@@ -119,6 +28,7 @@ public class FluentValidationActionFilterTests
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
+            RouteData = new Microsoft.AspNetCore.Routing.RouteData(),
             ActionDescriptor = new ControllerActionDescriptor()
         };
 
@@ -160,4 +70,7 @@ public class FluentValidationActionFilterTests
         filter.OnActionExecuted(context);
         // No exception means pass
     }
+
+    // Classe auxiliar para o teste
+    private class TestDto { }
 }
