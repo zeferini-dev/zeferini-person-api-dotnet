@@ -1,3 +1,5 @@
+# Ignorar resultados de testes
+TestResults/
 bin/
 obj/
 .vs/

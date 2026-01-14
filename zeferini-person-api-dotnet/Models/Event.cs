@@ -1,3 +1,5 @@
+
+using FluentValidation;
 namespace ZeferiniPersonApi.Models;
 
 public class Event
@@ -11,4 +13,14 @@ public class Event
     public int Version { get; set; }
     public DateTime Timestamp { get; set; }
     public DateTime CreatedAt { get; set; }
+
+
+
+    public void ValidateAndThrow()
+    {
+        var validator = new EventValidator();
+        var result = validator.Validate(this);
+        if (!result.IsValid)
+            throw new FluentValidation.ValidationException(result.Errors);
+    }
 }

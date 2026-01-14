@@ -1,3 +1,5 @@
+
+using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
 namespace ZeferiniPersonApi.DTOs;
@@ -20,4 +22,14 @@ public class CreatePersonDto
     [EmailAddress]
     [StringLength(180)]
     public string Email { get; set; } = string.Empty;
+
+
+
+    public void ValidateAndThrow()
+    {
+        var validator = new CreatePersonDtoValidator();
+        var result = validator.Validate(this);
+        if (!result.IsValid)
+            throw new FluentValidation.ValidationException(result.Errors);
+    }
 }

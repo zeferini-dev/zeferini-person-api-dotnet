@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+
+using FluentValidation;
 namespace ZeferiniPersonApi.Models;
 
 public class Person
@@ -33,4 +35,14 @@ public class Person
     /// </summary>
     /// <example>2025-01-02T12:00:00.000Z</example>
     public DateTime UpdatedAt { get; set; }
+
+
+
+    public void ValidateAndThrow()
+    {
+        var validator = new PersonValidator();
+        var result = validator.Validate(this);
+        if (!result.IsValid)
+            throw new FluentValidation.ValidationException(result.Errors);
+    }
 }
