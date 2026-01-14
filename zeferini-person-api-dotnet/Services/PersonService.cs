@@ -1,6 +1,7 @@
 using System.Text.Json;
 using ZeferiniPersonApi.DTOs;
 using ZeferiniPersonApi.Models;
+using MongoDB.Driver;
 
 namespace ZeferiniPersonApi.Services;
 
@@ -15,10 +16,12 @@ public interface IPersonService
 
 public class PersonService : IPersonService
 {
+    private readonly IMongoCollection<Person> _personCollection;
     private readonly IEventsService _eventsService;
 
-    public PersonService(IEventsService eventsService)
+    public PersonService(IMongoCollection<Person> personCollection, IEventsService eventsService)
     {
+        _personCollection = personCollection;
         _eventsService = eventsService;
     }
 
@@ -60,92 +63,15 @@ public class PersonService : IPersonService
 
     public async Task<List<Person>> GetAllAsync()
     {
-        var events = await _eventsService.GetEventsByAggregateTypeAsync("Person");
-        var personsMap = new Dictionary<string, Person>();
-
-        // Reconstruct state from events (reversed to process oldest first)
-        foreach (var evt in events.AsEnumerable().Reverse())
-        {
-            var aggregateId = evt.AggregateId;
-
-            switch (evt.EventType)
-            {
-                case "PersonCreated":
-                    personsMap[aggregateId] = new Person
-                    {
-                        Id = Guid.Parse(GetEventDataValue(evt.EventData, "id")),
-                        Name = GetEventDataValue(evt.EventData, "name"),
-                        Email = GetEventDataValue(evt.EventData, "email"),
-                        CreatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "createdAt")),
-                        UpdatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "createdAt"))
-                    };
-                    break;
-
-                case "PersonUpdated":
-                    if (personsMap.TryGetValue(aggregateId, out var personToUpdate))
-                    {
-                        var newName = GetEventDataValueOrNull(evt.EventData, "name");
-                        var newEmail = GetEventDataValueOrNull(evt.EventData, "email");
-                        
-                        if (newName != null) personToUpdate.Name = newName;
-                        if (newEmail != null) personToUpdate.Email = newEmail;
-                        personToUpdate.UpdatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "updatedAt"));
-                    }
-                    break;
-
-                case "PersonDeleted":
-                    personsMap.Remove(aggregateId);
-                    break;
-            }
-        }
-
-        return personsMap.Values
-            .OrderBy(p => p.CreatedAt)
-            .ToList();
+        var persons = await _personCollection.Find(_ => true).ToListAsync();
+        return persons.OrderBy(p => p.CreatedAt).ToList();
     }
 
     public async Task<Person?> GetByIdAsync(string id)
     {
-        var events = await _eventsService.GetEventsByAggregateIdAsync(id);
-
-        if (events.Count == 0)
+        if (!Guid.TryParse(id, out var guid))
             return null;
-
-        Person? person = null;
-
-        foreach (var evt in events)
-        {
-            switch (evt.EventType)
-            {
-                case "PersonCreated":
-                    person = new Person
-                    {
-                        Id = Guid.Parse(GetEventDataValue(evt.EventData, "id")),
-                        Name = GetEventDataValue(evt.EventData, "name"),
-                        Email = GetEventDataValue(evt.EventData, "email"),
-                        CreatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "createdAt")),
-                        UpdatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "createdAt"))
-                    };
-                    break;
-
-                case "PersonUpdated":
-                    if (person != null)
-                    {
-                        var newName = GetEventDataValueOrNull(evt.EventData, "name");
-                        var newEmail = GetEventDataValueOrNull(evt.EventData, "email");
-                        
-                        if (newName != null) person.Name = newName;
-                        if (newEmail != null) person.Email = newEmail;
-                        person.UpdatedAt = DateTime.Parse(GetEventDataValue(evt.EventData, "updatedAt"));
-                    }
-                    break;
-
-                case "PersonDeleted":
-                    person = null;
-                    break;
-            }
-        }
-
+        var person = await _personCollection.Find(p => p.Id == guid).FirstOrDefaultAsync();
         return person;
     }
 
@@ -213,27 +139,5 @@ public class PersonService : IPersonService
         });
 
         return person;
-    }
-
-    private static string GetEventDataValue(Dictionary<string, object> data, string key)
-    {
-        if (data.TryGetValue(key, out var value))
-        {
-            if (value is JsonElement jsonElement)
-                return jsonElement.GetString() ?? string.Empty;
-            return value?.ToString() ?? string.Empty;
-        }
-        return string.Empty;
-    }
-
-    private static string? GetEventDataValueOrNull(Dictionary<string, object> data, string key)
-    {
-        if (data.TryGetValue(key, out var value))
-        {
-            if (value is JsonElement jsonElement)
-                return jsonElement.GetString();
-            return value?.ToString();
-        }
-        return null;
-    }
+    } 
 }
