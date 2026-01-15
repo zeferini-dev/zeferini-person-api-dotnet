@@ -9,7 +9,7 @@ jobs:
        - master
    pull_request:
      branches:
-       - '*'
+       - main
 
  jobs:
    sonarcloud:
