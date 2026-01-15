@@ -35,4 +35,5 @@ jobs:
           dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           dotnet build zeferini-person-api-dotnet.slnx
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          
 
