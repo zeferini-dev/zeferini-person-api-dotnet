@@ -14,6 +14,37 @@ namespace ZeferiniPersonApi.Tests.Services;
 public class EventsServiceTests
 {
     [Fact]
+    public async Task PublishEventAsync_Calls_SaveEventToDatabaseAsync_And_Returns_Event()
+    {
+        // Arrange
+        var loggerMock = new Mock<ILogger<EventsService>>();
+        var dataSourceMock = new Mock<NpgsqlDataSource>();
+        var service = new TestableEventsService(loggerMock.Object, dataSourceMock.Object);
+
+        var payload = new EventPayload
+        {
+            AggregateId = "agg-1",
+            AggregateType = "Person",
+            EventType = "Created",
+            EventData = new Dictionary<string, object> { { "key", "value" } },
+            Metadata = new Dictionary<string, object?> { { "meta", "data" } }
+        };
+
+        // Act
+        var evt = await service.PublishEventAsync(payload);
+
+        // Assert
+        evt.AggregateId.Should().Be(payload.AggregateId);
+        evt.AggregateType.Should().Be(payload.AggregateType);
+        evt.EventType.Should().Be(payload.EventType);
+        evt.EventData.Should().BeEquivalentTo(payload.EventData);
+        evt.Metadata.Should().BeEquivalentTo(payload.Metadata);
+        evt.Id.Should().NotBeEmpty();
+        evt.Version.Should().Be(1);
+        service.SaveEventCalled.Should().BeTrue();
+    }
+
+    [Fact]
     public void ConvertConnectionString_Converts_PostgresUri_To_ConnectionString()
     {
         // Arrange
@@ -28,23 +59,35 @@ public class EventsServiceTests
         result.Should().Be("Host=localhost;Port=5432;Database=dbname;Username=user;Password=pass");
     }
 
-    
     [Fact]
-    public void EventPayload_Properties_Are_Required()
+    public void Dispose_Calls_DataSource_Dispose()
     {
-        // Arrange & Act
-        var payload = new EventPayload
-        {
-            AggregateId = "agg-1",
-            AggregateType = "Person",
-            EventType = "Created",
-            EventData = new Dictionary<string, object>()
-        };
+        // Arrange
+        var loggerMock = new Mock<ILogger<EventsService>>();
+        var dataSourceMock = new Mock<NpgsqlDataSource>();
+        var service = new EventsService(loggerMock.Object, dataSourceMock.Object);
+
+        // Act
+        service.Dispose();
 
         // Assert
-        payload.AggregateId.Should().Be("agg-1");
-        payload.AggregateType.Should().Be("Person");
-        payload.EventType.Should().Be("Created");
-        payload.EventData.Should().NotBeNull();
-    }    
+        dataSourceMock.Verify(ds => ds.Dispose(), Times.Once);
+    }
+
+    // Classe de teste para interceptar SaveEventToDatabaseAsync
+    private class TestableEventsService : EventsService
+    {
+        public bool SaveEventCalled { get; private set; }
+
+        public TestableEventsService(ILogger<EventsService> logger, NpgsqlDataSource dataSource)
+            : base(logger, dataSource)
+        {
+        }
+
+        protected override Task SaveEventToDatabaseAsync(Event eventEntity)
+        {
+            SaveEventCalled = true;
+            return Task.CompletedTask;
+        }
+    }
 }
