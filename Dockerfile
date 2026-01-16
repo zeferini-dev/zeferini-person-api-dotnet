@@ -2,7 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY zeferini-person-api-dotnet.csproj ./
+COPY . ./
 RUN dotnet restore
 
 # Copy source code and build
