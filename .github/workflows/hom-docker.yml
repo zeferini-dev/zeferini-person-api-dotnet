@@ -76,3 +76,4 @@ jobs:
       - name: Push Docker image
         working-directory: zeferini-person-api-dotnet/zeferini-person-api-dotnet
         run: docker push ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog
+
