@@ -1,5 +1,6 @@
-using ZeferiniPersonApi.Data;
 using ZeferiniPersonApi.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace ZeferiniPersonApi.Services;
 
@@ -23,15 +24,18 @@ public class EventsService : IEventsService, IDisposable
 {
     private readonly EventsDbContext _dbContext;
     private readonly ILogger<EventsService> _logger;
+    private bool _disposed;
 
     public EventsService(EventsDbContext dbContext, ILogger<EventsService> logger)
     {
-        _dbContext = dbContext;
-        _logger = logger;
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<Event> PublishEventAsync(EventPayload payload)
     {
+        if (payload == null) throw new ArgumentNullException(nameof(payload));
+
         var eventEntity = new Event
         {
             Id = Guid.NewGuid(),
@@ -45,7 +49,7 @@ public class EventsService : IEventsService, IDisposable
             CreatedAt = DateTime.UtcNow
         };
 
-        _dbContext.Events.Add(eventEntity);
+        await _dbContext.Events.AddAsync(eventEntity);
         await _dbContext.SaveChangesAsync();
 
         _logger.LogDebug("Event published: {EventType} for {AggregateType}/{AggregateId}",
@@ -54,21 +58,41 @@ public class EventsService : IEventsService, IDisposable
         return eventEntity;
     }
 
-    // Métodos de consulta usando LINQ
     public async Task<List<Event>> GetEventsByAggregateIdAsync(string aggregateId)
-        => await _dbContext.Events
+    {
+        if (string.IsNullOrWhiteSpace(aggregateId)) throw new ArgumentException("AggregateId cannot be null or empty.", nameof(aggregateId));
+
+        return await _dbContext.Events
             .Where(e => e.AggregateId == aggregateId)
             .OrderBy(e => e.CreatedAt)
             .ToListAsync();
+    }
 
     public async Task<List<Event>> GetEventsByAggregateTypeAsync(string aggregateType)
-        => await _dbContext.Events
+    {
+        if (string.IsNullOrWhiteSpace(aggregateType)) throw new ArgumentException("AggregateType cannot be null or empty.", nameof(aggregateType));
+
+        return await _dbContext.Events
             .Where(e => e.AggregateType == aggregateType)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
+            _disposed = true;
+        }
+    }
 
     public void Dispose()
     {
-        _dbContext.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }
