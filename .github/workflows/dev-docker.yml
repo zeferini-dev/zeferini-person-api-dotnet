@@ -33,7 +33,9 @@ jobs:
           username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
           password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
       - name: Build Docker image
-        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev -f zeferini-person-api-dotnet/zeferini-person-api-dotnet/Dockerfile .
+        working-directory: zeferini-person-api-dotnet/zeferini-person-api-dotnet
+        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev .
       - name: Push Docker image
+        working-directory: zeferini-person-api-dotnet/zeferini-person-api-dotnet
         run: docker push zeferinidotdev/zeferini-person-api-dotnet:dev
 
