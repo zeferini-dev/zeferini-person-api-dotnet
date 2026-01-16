@@ -22,11 +22,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
-        run: dotnet restore zeferini-person-api-dotnet.slnx
+        run: dotnet restore src/zeferini-person-api-dotnet.slnx
       - name: Build
-        run: dotnet build zeferini-person-api-dotnet.slnx --no-restore
+        run: dotnet build src/zeferini-person-api-dotnet.slnx --no-restore
       - name: Test
-        run: dotnet test zeferini-person-api-dotnet.slnx --no-build --verbosity normal
+        run: dotnet test src/zeferini-person-api-dotnet.slnx --no-build --verbosity normal
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
