@@ -1,11 +1,9 @@
+
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-COPY . ./
-RUN dotnet restore
-
-# Copy source code and build
 COPY . .
+RUN dotnet restore
 RUN dotnet publish -c Release -o /app/publish
 
 # Runtime stage
