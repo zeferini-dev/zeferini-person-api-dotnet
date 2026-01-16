@@ -71,7 +71,7 @@ jobs:
           username: ${{ secrets.HOM_DOCKERHUB_USERNAME }}
           password: ${{ secrets.HOM_DOCKERHUB_TOKEN }}
       - name: Build Docker image
-        run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog -f Dockerfile .
+        run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
       - name: Push Docker image
         run: docker push ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog
 
