@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-preview AS build
 WORKDIR /src
 
-# Copy project file and restore dependencies
-COPY *.csproj ./
+COPY zeferini-person-api-dotnet.csproj ./
 RUN dotnet restore
 
 # Copy source code and build
