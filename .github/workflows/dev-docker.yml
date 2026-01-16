@@ -1,0 +1,44 @@
+name: Build and Test (Dev)
+
+on:
+  push:
+    branches:
+      - develop
+      - feature/**
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore zeferini-person-api-dotnet.sln
+      - name: Build
+        run: dotnet build zeferini-person-api-dotnet.sln --no-restore
+      - name: Test
+        run: dotnet test zeferini-person-api-dotnet.sln --no-build --verbosity normal
+
+  docker-dev:
+    name: Build and Push Docker Image (Dev)
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DEV_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:dev .
+      - name: Push Docker image
+        run: docker push ${{ secrets.DEV_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:dev
