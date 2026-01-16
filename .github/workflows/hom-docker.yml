@@ -71,9 +71,9 @@ jobs:
           username: ${{ secrets.HOM_DOCKERHUB_USERNAME }}
           password: ${{ secrets.HOM_DOCKERHUB_TOKEN }}
       - name: Build Docker image
-        working-directory: zeferini-person-api-dotnet/zeferini-person-api-dotnet
+        working-directory: ${{ github.workspace }}/zeferini-person-api-dotnet/zeferini-person-api-dotnet
         run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog .
       - name: Push Docker image
-        working-directory: zeferini-person-api-dotnet/zeferini-person-api-dotnet
+        working-directory: ${{ github.workspace }}/zeferini-person-api-dotnet/zeferini-person-api-dotnet
         run: docker push ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog
 
