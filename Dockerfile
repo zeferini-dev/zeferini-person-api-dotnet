@@ -2,10 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY zeferini-person-api-dotnet/zeferini-person-api-dotnet/zeferini-person-api-dotnet.csproj ./
+COPY zeferini-person-api-dotnet.csproj ./
 RUN dotnet restore
 
-COPY zeferini-person-api-dotnet/zeferini-person-api-dotnet/. .
+# Copy source code and build
+COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
 # Runtime stage
