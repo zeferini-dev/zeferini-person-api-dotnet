@@ -15,7 +15,7 @@ jobs:
       - name: Create Pull Request to develop
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           base: develop
           branch: ${{ github.ref_name }}
           title: 'Merge feature ${{ github.ref_name }} into develop'
