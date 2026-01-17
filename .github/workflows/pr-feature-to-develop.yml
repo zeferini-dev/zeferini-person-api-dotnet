@@ -1,9 +1,8 @@
+
 name: Create PR from feature to develop
 
 on:
-  push:
-    branches:
-      - 'feature/**'
+  workflow_call:
 
 jobs:
   create-pr-to-develop:

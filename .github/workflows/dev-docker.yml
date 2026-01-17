@@ -39,3 +39,8 @@ jobs:
       - name: Push Docker image
         run: docker push zeferinidotdev/zeferini-person-api-dotnet:dev
 
+    # Chama o workflow de PR após o build, test e publish
+    call-pr-feature-to-develop:
+      needs: build-test-publish
+      uses: ./.github/workflows/pr-feature-to-develop.yml
+
