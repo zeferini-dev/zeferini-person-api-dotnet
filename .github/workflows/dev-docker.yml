@@ -13,6 +13,8 @@ jobs:
     name: Build, Test and Publish Docker Image (Dev)
     runs-on: ubuntu-latest
     steps:
+      - name: Clean NuGet cache
+        run: dotnet nuget locals all --clear
       - name: Checkout code
         uses: actions/checkout@v4
         with:
