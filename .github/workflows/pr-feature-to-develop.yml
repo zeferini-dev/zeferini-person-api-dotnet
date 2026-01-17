@@ -1,0 +1,24 @@
+name: Create PR from feature to develop
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  create-pr-to-develop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create Pull Request to develop
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: ${{ github.ref_name }}
+          title: 'Merge feature ${{ github.ref_name }} into develop'
+          body: 'PR automática criada pelo CI após build, test e publish da imagem dev.'
+          draft: false
