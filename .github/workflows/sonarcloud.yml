@@ -27,8 +27,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/*.xml"
-      - name: Restore all dependencies
-        run: dotnet restore src/
+      - name: Restore dependencies
+        run: dotnet restore src/zeferini-person-api-dotnet.slnx
       - name: Build
         run: dotnet build src/zeferini-person-api-dotnet.slnx --no-restore
       - name: Test with coverage
