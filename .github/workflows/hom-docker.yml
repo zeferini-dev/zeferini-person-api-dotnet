@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
       - name: Test with coverage
-        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.xml
 
   sonarcloud:
     name: SonarCloud
@@ -49,11 +49,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/*.xml"
+          dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="src/zeferini-person-api-dotnet/TestResults/coverage.xml"
       - name: Build
         run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
       - name: Test with coverage
-        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.xml
       - name: Run SonarCloud end
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
