@@ -44,4 +44,6 @@ jobs:
   call-pr-feature-to-develop:
     needs: build-test-publish
     uses: ./.github/workflows/pr-feature-to-develop.yml
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}
     
