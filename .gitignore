@@ -1,3 +1,5 @@
+# Ignorar resultados de testes
+TestResults/
 bin/
 obj/
 .vs/
@@ -21,9 +23,11 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+TestResults/
 
 # Visual Studio
 .vs/
+.vscode/
 *.rsuser
 *.sln.docstates
 
@@ -62,4 +66,4 @@ Desktop.ini
 # Docker
 docker-compose*.yml
 !docker-compose.yml
-/src/TestResults
+

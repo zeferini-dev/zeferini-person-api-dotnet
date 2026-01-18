@@ -1,22 +1,24 @@
-using ZeferiniPersonApi.Services;
-
-
 using FluentValidation;
+using Microsoft.OpenApi;
 using ZeferiniPersonApi.DTOs;
 using ZeferiniPersonApi.Models;
+using ZeferiniPersonApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
-builder.Services.AddValidatorsFromAssemblyContaining<CreatePersonDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<UpdatePersonDtoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<PersonValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<EventValidator>();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ZeferiniPersonApi.Filters.FluentValidationActionFilter>();
+});
+builder.Services.AddTransient<IValidator<CreatePersonDto>, CreatePersonDtoValidator>();
+builder.Services.AddTransient<IValidator<UpdatePersonDto>, UpdatePersonDtoValidator>();
+builder.Services.AddTransient<IValidator<Person>, PersonValidator>();
+builder.Services.AddTransient<IValidator<Event>, EventValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Zeferini Person API",
         Version = "v1",
@@ -42,16 +44,17 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
+app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Zeferini Person API v1");
     options.RoutePrefix = string.Empty;
 });
-
-app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 app.Run($"http://0.0.0.0:{port}");
+
+public partial class Program { } // For integration testing purposes

@@ -1,0 +1,49 @@
+
+name: Build, Test and Publish Docker (Dev)
+
+
+on:
+  push:
+    branches:
+      - feature/**
+
+jobs:
+
+  build-test-publish:
+    name: Build, Test and Publish Docker Image (Dev)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean NuGet cache
+        run: dotnet nuget locals all --clear
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore src/zeferini-person-api-dotnet.sln
+      - name: Build
+        run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
+      - name: Test
+        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal
+      - name: Login to DockerHub
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
+        with:
+          username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
+      - name: Build Docker image
+        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
+      - name: Push Docker image
+        run: docker push zeferinidotdev/zeferini-person-api-dotnet:dev
+
+
+  # Chama o workflow de PR após o build, test e publish
+  call-pr-feature-to-develop:
+    needs: build-test-publish
+    uses: ./.github/workflows/pr-feature-to-develop.yml
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}
+    
