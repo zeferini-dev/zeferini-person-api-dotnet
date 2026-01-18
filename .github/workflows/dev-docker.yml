@@ -24,18 +24,18 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
-        run: dotnet restore src/zeferini-person-api-dotnet.sln
+        run: dotnet restore app/zeferini-person-api-dotnet.sln
       - name: Build
-        run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
+        run: dotnet build app/zeferini-person-api-dotnet.sln --no-restore
       - name: Test
-        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal
+        run: dotnet test app/zeferini-person-api-dotnet.sln --no-build --verbosity normal
       - name: Login to DockerHub
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
         with:
           username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
           password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
       - name: Build Docker image
-        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
+        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev -f app/zeferini-person-api-dotnet/Dockerfile app/zeferini-person-api-dotnet
       - name: Push Docker image
         run: docker push zeferinidotdev/zeferini-person-api-dotnet:dev
 

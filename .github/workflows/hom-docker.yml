@@ -24,11 +24,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore dependencies
-        run: dotnet restore src/zeferini-person-api-dotnet.sln
+        run: dotnet restore app/zeferini-person-api-dotnet.sln
       - name: Build
-        run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
+        run: dotnet build app/zeferini-person-api-dotnet.sln --no-restore
       - name: Test with coverage
-        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=src/zeferini-person-api-dotnet/TestResults/coverage.xml
+        run: dotnet test app/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=app/zeferini-person-api-dotnet/TestResults/coverage.xml
 
   sonarcloud:
     name: SonarCloud
@@ -49,11 +49,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="src/zeferini-person-api-dotnet/TestResults/coverage.xml"
+          dotnet sonarscanner begin /k:"zeferini-dev_zeferini-person-api-dotnet" /o:"zeferini-dev" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="app/zeferini-person-api-dotnet/TestResults/coverage.xml"
       - name: Build
-        run: dotnet build src/zeferini-person-api-dotnet.sln --no-restore
+        run: dotnet build app/zeferini-person-api-dotnet.sln --no-restore
       - name: Test with coverage
-        run: dotnet test src/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=src/zeferini-person-api-dotnet/TestResults/coverage.xml
+        run: dotnet test app/zeferini-person-api-dotnet.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=app/zeferini-person-api-dotnet/TestResults/coverage.xml
       - name: Run SonarCloud end
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
           username: ${{ secrets.HOM_DOCKERHUB_USERNAME }}
           password: ${{ secrets.HOM_DOCKERHUB_TOKEN }}
       - name: Build Docker image
-        run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
+        run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog -f app/zeferini-person-api-dotnet/Dockerfile app/zeferini-person-api-dotnet
       - name: Push Docker image
         run: docker push ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog
 
