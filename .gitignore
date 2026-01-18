@@ -1,69 +1,56 @@
-# Ignorar resultados de testes
-TestResults/
+# .NET build artifacts
 bin/
 obj/
-.vs/
-*.user
-*.suo
-*.userprefs
-.idea/
-*.swp
-*~
-
-# Build results
-[Dd]ebug/
-[Rr]elease/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-TestResults/
-
-# Visual Studio
-.vs/
-.vscode/
-*.rsuser
-*.sln.docstates
-
-# Rider
-.idea/
+out/
 
 # User-specific files
-*.suo
 *.user
+*.suo
 *.userosscache
 *.sln.docstates
 
-# NuGet
+# Visual Studio Code settings
+.vscode/
+
+# Rider settings
+.idea/
+
+# Build results
+*.dll
+*.exe
+*.app
+*.log
+
+# NuGet packages
 *.nupkg
-*.snupkg
-**/[Pp]ackages/*
+packages/
+.nuget/
 
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
+# Test results
+TestResults/
+*.TestResults/
 
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
+# Publish outputs
+publish/
+*.publish/
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Mac
+# OS generated files
 .DS_Store
-.AppleDouble
-.LSOverride
+Thumbs.db
 
-# Docker
-docker-compose*.yml
-!docker-compose.yml
+# Others
+*.swp
+*.bak
+*.tmp
 
+# Local environment files
+.env
+.env.*
+/src/zeferini-person-api-dotnet/.vs
+/src/.vs/zeferini-person-api-dotnet.slnx/DesignTimeBuild
+/src/.vs/zeferini-person-api-dotnet.slnx/FileContentIndex
+/.vs
+/src/.vs
+/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
+/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
+/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/v18
