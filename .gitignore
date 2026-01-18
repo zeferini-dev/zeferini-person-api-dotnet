@@ -46,10 +46,14 @@ Thumbs.db
 # Local environment files
 .env
 .env.*
-/src/zeferini-person-api-dotnet/.vs
-/src/.vs/zeferini-person-api-dotnet.slnx/DesignTimeBuild
-/src/.vs/zeferini-person-api-dotnet.slnx/FileContentIndex
+/app/zeferini-person-api-dotnet/.vs
+/app/.vs/zeferini-person-api-dotnet.slnx/DesignTimeBuild
+/app/.vs/zeferini-person-api-dotnet.slnx/FileContentIndex
 /.vs
+/app/.vs
+/app/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
+/app/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
+/app/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/v18
 /src/.vs
 /src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
 /src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
