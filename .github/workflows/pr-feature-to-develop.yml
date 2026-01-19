@@ -16,9 +16,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
+      - name: Listar branches disponíveis
+        run: git branch -a && git status
       - name: Debug branch e token
         run: |
-          echo "Branch: ${{ github.ref_name }}"
+          echo "Branch: ${{ github.head_ref || github.ref_name }}"
           echo "Usuário do token: $(gh api user --jq .login)" || echo "GH CLI não disponível, verifique permissões do token."
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
@@ -27,7 +29,7 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
           base: develop
-          branch: ${{ github.ref_name }}
-          title: 'Merge feature ${{ github.ref_name }} into develop'
+          branch: ${{ github.head_ref || github.ref_name }}
+          title: 'Merge feature ${{ github.head_ref || github.ref_name }} into develop'
           body: 'PR automática criada pelo CI após build, test e publish da imagem dev.'
           draft: false
