@@ -16,6 +16,12 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
+      - name: Debug branch e token
+        run: |
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Usuário do token: $(gh api user --jq .login)" || echo "GH CLI não disponível, verifique permissões do token."
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
       - name: Create Pull Request to develop
         uses: peter-evans/create-pull-request@v6
         with:
