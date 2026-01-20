@@ -76,3 +76,22 @@ jobs:
         run: docker build -t ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
       - name: Push Docker image
         run: docker push ${{ secrets.HOM_DOCKERHUB_USERNAME }}/zeferini-person-api-dotnet:homolog
+
+  create-pr-feature-nova-to-develop:
+    name: Create PR feature/nova → develop
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/feature/nova'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: feature/nova
+          title: 'Merge feature/nova into develop'
+          body: 'PR automática criada pelo workflow para merge de feature/nova em develop.'
+          draft: false
