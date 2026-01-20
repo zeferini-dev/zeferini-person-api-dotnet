@@ -45,10 +45,13 @@ jobs:
         with:
           username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
           password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
-      - name: Build Docker image
-        run: docker build -t zeferinidotdev/zeferini-person-api-dotnet:dev -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
+      - name: Build Docker image (no cache)
+        run: docker build --no-cache -t zeferinidotdev/zeferini-person-api-dotnet:dev -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
       - name: Push Docker image
-        run: docker push zeferinidotdev/zeferini-person-api-dotnet:dev
+        run: |
+          echo "Iniciando push da imagem Docker..."
+          docker push zeferinidotdev/zeferini-person-api-dotnet:dev
+          echo "Push finalizado. Status: $?"
 
 
   # Chama o workflow de PR após o build, test e publish
