@@ -4,7 +4,7 @@ name: Create PR from feature to develop
 on:
   workflow_call:
     secrets:
-      GH_PAT_FUL:
+      GH_PAT:
         required: true
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: Create Pull Request to develop
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GH_PAT_FUL }}
+          token: ${{ secrets.GH_PAT }}
           base: develop
           branch: ${{ github.ref_name }}
           title: 'Merge feature ${{ github.ref_name }} into develop'

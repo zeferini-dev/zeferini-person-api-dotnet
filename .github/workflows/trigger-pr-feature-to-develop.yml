@@ -9,4 +9,4 @@ jobs:
   call-create-pr:
     uses: ./.github/workflows/pr-feature-to-develop.yml
     secrets:
-      GH_PAT_FUL: ${{ secrets.GH_PAT_FUL }}
+      GH_PAT: ${{ secrets.GH_PAT }}
