@@ -43,6 +43,8 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Restore dependencies
+        run: dotnet restore src/zeferini-person-api-dotnet.sln
       - name: Install SonarCloud Scanner
         run: dotnet tool install --global dotnet-sonarscanner
       - name: Run SonarCloud begin
