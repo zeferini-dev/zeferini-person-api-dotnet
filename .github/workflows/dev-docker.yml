@@ -73,12 +73,19 @@ jobs:
         with:
           username: ${{ secrets.DEV_DOCKERHUB_USERNAME }}
           password: ${{ secrets.DEV_DOCKERHUB_TOKEN }}
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
       - name: Build Docker image (no cache)
-        run: docker build --no-cache -t zeferinidotdev/zeferini-person-api-dotnet:dev -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
+        run: |
+          DOCKER_TAG=$(echo "${{ steps.extract_branch.outputs.branch }}" | sed 's/\//-/g')
+          docker build --no-cache -t zeferinidotdev/zeferini-person-api-dotnet:$DOCKER_TAG -f src/zeferini-person-api-dotnet/Dockerfile src/zeferini-person-api-dotnet
       - name: Push Docker image
         run: |
           echo "Iniciando push da imagem Docker..."
-          docker push zeferinidotdev/zeferini-person-api-dotnet:dev
+          DOCKER_TAG=$(echo "${{ steps.extract_branch.outputs.branch }}" | sed 's/\//-/g')
+          docker push zeferinidotdev/zeferini-person-api-dotnet:$DOCKER_TAG
           echo "Push finalizado. Status: $?"
 
   call-pr-feature-to-develop:
