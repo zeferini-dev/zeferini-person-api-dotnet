@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log início do job merge-develop-into-feature
-        run: echo "[LOG] Iniciando job: merge-develop-into-feature"
+        run: 'echo "[LOG] Iniciando job: merge-develop-into-feature"'
       - name: Checkout feature branch
         uses: actions/checkout@v4
         with:
@@ -40,7 +40,7 @@ jobs:
     needs: merge-develop-into-feature
     steps:
       - name: Log início do job build-test-publish
-        run: echo "[LOG] Iniciando job: build-test-publish"
+        run: 'echo "[LOG] Iniciando job: build-test-publish"'
       - name: Clean NuGet cache
         run: dotnet nuget locals all --clear
       - name: Checkout code
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log início do job call-pr-feature-to-develop
-        run: echo "[LOG] Iniciando job: call-pr-feature-to-develop"
+        run: 'echo "[LOG] Iniciando job: call-pr-feature-to-develop"'
       - name: Checkout code
         uses: actions/checkout@v4
         with:
