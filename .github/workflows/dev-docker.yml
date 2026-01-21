@@ -10,6 +10,8 @@ jobs:
     name: Merge develop into feature branch
     runs-on: ubuntu-latest
     steps:
+      - name: Log início do job merge-develop-into-feature
+        run: echo "[LOG] Iniciando job: merge-develop-into-feature"
       - name: Checkout feature branch
         uses: actions/checkout@v4
         with:
@@ -37,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: merge-develop-into-feature
     steps:
+      - name: Log início do job build-test-publish
+        run: echo "[LOG] Iniciando job: build-test-publish"
       - name: Clean NuGet cache
         run: dotnet nuget locals all --clear
       - name: Checkout code
@@ -79,6 +83,11 @@ jobs:
 
   call-pr-feature-to-develop:
     needs: build-test-publish
-    uses: ./.github/workflows/pr-feature-to-develop.yml
-    secrets:
-      GH_PAT: ${{ secrets.GH_PAT }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log início do job call-pr-feature-to-develop
+        run: echo "[LOG] Iniciando job: call-pr-feature-to-develop"
+      - name: Chamar workflow de PR
+        uses: ./.github/workflows/pr-feature-to-develop.yml
+        with:
+          GH_PAT: ${{ secrets.GH_PAT }}
