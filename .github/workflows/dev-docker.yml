@@ -17,7 +17,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT || github.token }}
       - name: Set up Git user
         run: |
           git config user.name "github-actions[bot]"
@@ -99,22 +99,21 @@ jobs:
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT }}
-        - name: Commit and push all changes
-          run: |
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add .
-            git diff --cached --quiet || git commit -m "CI: commit automatico de alterações geradas pelo workflow"
-            git push origin HEAD:${{ github.ref_name }}
-          env:
-            GH_PAT: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT || github.token }}
+      - name: Commit and push all changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "CI: commit automatico de alterações geradas pelo workflow"
+          git push origin HEAD:${{ github.ref_name }}
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
       - name: Create Pull Request to develop
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GH_PAT }}
-          base: develop
-          branch: ${{ github.ref_name }}
-          title: 'Merge feature ${{ github.ref_name }} into develop'
-          body: 'PR automática criada pelo CI após build, test e publish da imagem dev.'
-          draft: false
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+        run: |
+          gh pr create --base develop --head ${{ github.ref_name }} \
+            --title "Merge feature ${{ github.ref_name }} into develop" \
+            --body "PR automática criada pelo CI após build, test e publish da imagem dev." \
+            || echo "PR já existe ou não pôde ser criada."
