@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: dockerhub
-  IMAGE_NAME: zeferinihom/zeferini-person-api-dotnet
+  IMAGE_NAME: zeferinipro/zeferini-person-api-dotnet
   DOTNET_VERSION: 10.0.x
   SOLUTION_PATH: src/zeferini-person-api-dotnet.sln
   COVERAGE_REPORT_DIR: src/zeferini-person-api-dotnet.Tests/TestResults
