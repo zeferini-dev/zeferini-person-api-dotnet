@@ -1,30 +1,24 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Moq;
 using Xunit;
-using ZeferiniPersonApi.Filters;    
+using ZeferiniPersonApi.DTOs;
+using ZeferiniPersonApi.Filters;
 
 namespace ZeferiniPersonApi.Tests.Filters;
 
 public class FluentValidationActionFilterTests
-{   
-
+{
     [Fact]
     public void OnActionExecuting_NullArgument_DoesNothing()
     {
         // Arrange
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        var httpContext = new DefaultHttpContext
-        {
-            RequestServices = serviceProviderMock.Object
-        };
-
+        var httpContext = new DefaultHttpContext();
         var actionContext = new ActionContext
         {
             HttpContext = httpContext,
@@ -32,7 +26,7 @@ public class FluentValidationActionFilterTests
             ActionDescriptor = new ControllerActionDescriptor()
         };
 
-        var actionArguments = new Dictionary<string, object> { { "dto", null! } };
+        var actionArguments = new Dictionary<string, object?> { { "dto", null } };
         var context = new ActionExecutingContext(
             actionContext,
             new List<IFilterMetadata>(),
@@ -46,7 +40,7 @@ public class FluentValidationActionFilterTests
         filter.OnActionExecuting(context);
 
         // Assert
-        Assert.Null(context.Result);
+        context.Result.Should().BeNull();
     }
 
     [Fact]
@@ -68,9 +62,57 @@ public class FluentValidationActionFilterTests
 
         // Act & Assert
         filter.OnActionExecuted(context);
-        // No exception means pass
     }
 
-    // Classe auxiliar para o teste
-    private class TestDto { }
+    [Fact]
+    public void FluentValidationActionFilter_IsActionFilter()
+    {
+        var filter = new FluentValidationActionFilter();
+        
+        filter.Should().BeAssignableTo<IActionFilter>();
+    }
+
+    [Fact]
+    public void CreatePersonDto_Validation_Works()
+    {
+        var validator = new CreatePersonDtoValidator();
+        var validDto = new CreatePersonDto { Name = "Ada", Email = "ada@example.com" };
+        
+        var result = validator.Validate(validDto);
+        
+        result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void CreatePersonDto_Validation_FailsOnInvalidData()
+    {
+        var validator = new CreatePersonDtoValidator();
+        var invalidDto = new CreatePersonDto { Name = "", Email = "invalid" };
+        
+        var result = validator.Validate(invalidDto);
+        
+        result.IsValid.Should().BeFalse();
+    }
+
+    [Fact]
+    public void UpdatePersonDtoValidator_Works()
+    {
+        var validator = new UpdatePersonDtoValidator();
+        var validDto = new UpdatePersonDto { Name = "Ada", Email = "ada@example.com" };
+        
+        var result = validator.Validate(validDto);
+        
+        result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void UpdatePersonDtoValidator_AllowsNullFields()
+    {
+        var validator = new UpdatePersonDtoValidator();
+        var dtoWithNulls = new UpdatePersonDto { Name = null, Email = null };
+        
+        var result = validator.Validate(dtoWithNulls);
+        
+        result.IsValid.Should().BeTrue();
+    }
 }
