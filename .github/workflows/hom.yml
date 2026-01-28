@@ -10,8 +10,8 @@ env:
   REGISTRY: dockerhub
   IMAGE_NAME: zeferinihom/zeferini-person-api-dotnet-hom
   DOTNET_VERSION: 10.0.x
-  SOLUTION_PATH: src/zeferini-person-api-dotnet/zeferini-person-api-dotnet.sln
-  COVERAGE_OUTPUT: src/zeferini-person-api-dotnet/TestResults/coverage.xml
+  SOLUTION_PATH: src/zeferini-person-api-dotnet.sln
+  COVERAGE_OUTPUT: src/zeferini-person-api-dotnet.Tests/TestResults/coverage.xml
 
 jobs:
   build-test-coverage:
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
-          path: src/zeferini-person-api-dotnet/TestResults/
+          path: src/zeferini-person-api-dotnet.Tests/TestResults/
 
   sonarcloud-analysis:
     name: SonarCloud Analysis (HOM)
@@ -121,7 +121,7 @@ jobs:
             --no-cache \
             -t ${{ env.IMAGE_NAME }}:hom-${{ steps.version.outputs.version }} \
             -t ${{ env.IMAGE_NAME }}:hom-latest \
-            -f src/zeferini-person-api-dotnet/zeferini-person-api-dotnet/Dockerfile \
+            -f src/zeferini-person-api-dotnet/Dockerfile \
             .
 
       - name: Push Docker image

@@ -11,7 +11,7 @@ env:
   REGISTRY: dockerhub
   IMAGE_NAME: zeferinidotdev/zeferini-person-api-dotnet-dev
   DOTNET_VERSION: 10.0.x
-  SOLUTION_PATH: src/zeferini-person-api-dotnet/zeferini-person-api-dotnet.sln
+  SOLUTION_PATH: src/zeferini-person-api-dotnet.sln
 
 jobs:
   build-test:
@@ -69,7 +69,7 @@ jobs:
             --no-cache \
             -t ${{ env.IMAGE_NAME }}:${{ steps.docker_tag.outputs.tag }} \
             -t ${{ env.IMAGE_NAME }}:latest \
-            -f src/zeferini-person-api-dotnet/zeferini-person-api-dotnet/Dockerfile \
+            -f src/zeferini-person-api-dotnet/Dockerfile \
             .
 
       - name: Push Docker image

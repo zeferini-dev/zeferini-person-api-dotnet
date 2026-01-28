@@ -10,8 +10,8 @@ env:
   REGISTRY: dockerhub
   IMAGE_NAME: zeferinihom/zeferini-person-api-dotnet
   DOTNET_VERSION: 10.0.x
-  SOLUTION_PATH: src/zeferini-person-api-dotnet/zeferini-person-api-dotnet.sln
-  COVERAGE_REPORT_DIR: src/zeferini-person-api-dotnet/zeferini-person-api-dotnet.tests/TestResults
+  SOLUTION_PATH: src/zeferini-person-api-dotnet.sln
+  COVERAGE_REPORT_DIR: src/zeferini-person-api-dotnet.Tests/TestResults
 
 jobs:
   build-test-coverage:
@@ -75,7 +75,7 @@ jobs:
             --no-cache \
             -t ${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.version }} \
             -t ${{ env.IMAGE_NAME }}:latest \
-            -f src/zeferini-person-api-dotnet/zeferini-person-api-dotnet/Dockerfile \
+            -f src/zeferini-person-api-dotnet/Dockerfile \
             .
 
       - name: Push Docker image
