@@ -11,10 +11,11 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["src/zeferini-person-api-dotnet/zeferini-person-api-dotnet.csproj", "zeferini-person-api-dotnet/"]
+RUN cd zeferini-person-api-dotnet && dotnet restore "zeferini-person-api-dotnet.csproj"
+COPY src/zeferini-person-api-dotnet/ zeferini-person-api-dotnet/
 WORKDIR /src/zeferini-person-api-dotnet
-COPY ["zeferini-person-api-dotnet.csproj", "."]
-RUN dotnet restore "zeferini-person-api-dotnet.csproj"
-COPY . .
 RUN dotnet build "zeferini-person-api-dotnet.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
