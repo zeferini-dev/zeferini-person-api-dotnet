@@ -12,6 +12,9 @@ out/
 # Visual Studio Code settings
 .vscode/
 
+# Visual Studio settings
+.vs/
+
 # Rider settings
 .idea/
 
@@ -46,20 +49,3 @@ Thumbs.db
 # Local environment files
 .env
 .env.*
-/src/zeferini-person-api-dotnet/.vs
-/app/.vs/zeferini-person-api-dotnet.slnx/DesignTimeBuild
-/app/.vs/zeferini-person-api-dotnet.slnx/FileContentIndex
-/.vs
-/app/.vs
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/v18
-/src/.vs
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/v18
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/DesignTimeBuild
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/FileContentIndex
-/src/zeferini-person-api-dotnet.Tests/.vs/zeferini-person-api-dotnet.Tests/v18
-/src/zeferini-person-api-dotnet/.vs
-/app/.vs
