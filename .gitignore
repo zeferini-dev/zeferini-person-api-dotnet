@@ -11,9 +11,11 @@ out/
 
 # Visual Studio Code settings
 .vscode/
+/.vscode/
 
 # Visual Studio settings
 .vs/
+/.vs/
 
 # Rider settings
 .idea/
