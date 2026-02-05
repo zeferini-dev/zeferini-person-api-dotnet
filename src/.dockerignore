@@ -6,8 +6,13 @@
 **/.project
 **/.settings
 **/.toolstarget
-**/.vs
-**/.vscode
+# Visual Studio Code settings
+.vscode/
+/.vscode/
+
+# Visual Studio settings
+.vs/
+/.vs/
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
